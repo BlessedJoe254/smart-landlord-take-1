@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Landlord - Register</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <style>
+    body {
+      background-color: #001f3f;
+      color: #ff8c00;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .hero-bg {
+      min-height: 100vh;
+      background: url('images/home-bg.jpg') no-repeat center center/cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 15px;
+    }
+    .form-section {
+      max-width: 400px;
+      width: 100%;
+      padding: 25px;
+      background: #142e6c;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      color: white;
+    }
+    .form-section h2 {
+      color: #ffb366;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      color: #ffb366;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+    }
+    input:focus, select:focus {
+      outline: 2px solid #ff8c00;
+      background-color: #0d1a3f;
+      color: white;
+    }
+    .btn {
+      width: 100%;
+      background-color: #ff8c00;
+      color: #001f3f;
+      padding: 12px;
+      margin-top: 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #cc7000;
+    }
+    .access-code-note {
+      font-style: italic;
+      color: #f4c542;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+    header, footer {
+      position: relative;
+      z-index: 10;
+      background-color: #001f3f;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="images/logo.png" alt="Smart Landlord Logo" />
+      <div class="logo-text">
+        <h1>Smart Landlord</h1>
+        <p class="tagline">Rent. Track. Relax.</p>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html" >Home</a></li>
+        <li><a href="houses.html">Houses</a></li>
+        <li><a href="aboutus.html">About Us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero-bg">
+    <section class="form-section">
+      <h2>Register</h2>
+
+      <form id="register-form">
+        <label for="role">Register as</label>
+        <select id="role" name="role" required>
+          <option value="" disabled selected>Select role</option>
+          <option value="tenant">Tenant</option>
+          <option value="landlord">Landlord</option>
+        </select>
+
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your full name" required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Create password" required />
+
+        <div id="access-code-div" style="display:none;">
+          <label for="access-code">Landlord Access Code</label>
+          <input type="password" id="access-code" name="access-code" placeholder="Enter access code" />
+          <div class="access-code-note">* Required to register as a landlord</div>
+        </div>
+
+        <button type="submit" class="btn">Register</button>
+      </form>
+
+      <p style="text-align:center; margin-top: 15px; color: #ffb366;">
+        Already have an account? <a href="login.html" style="color: #ff8c00;">Login here</a>
+      </p>
+    </section>
+  </section>
+
+  <footer>
+    <p>Smart Landlord — Rent. Track. Relax.</p>
+    <p class="copyright">© 2025 Smart Landlord. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const roleSelect = document.getElementById('role');
+    const accessCodeDiv = document.getElementById('access-code-div');
+
+    roleSelect.addEventListener('change', () => {
+      if (roleSelect.value === 'landlord') {
+        accessCodeDiv.style.display = 'block';
+        document.getElementById('access-code').setAttribute('required', 'required');
+      } else {
+        accessCodeDiv.style.display = 'none';
+        document.getElementById('access-code').removeAttribute('required');
+      }
+    });
+
+    // Utility: get users from localStorage or empty array
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('users') || '[]');
+    }
+
+    // Utility: save users to localStorage
+    function saveUsers(users) {
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    document.getElementById('register-form').addEventListener('submit', e => {
+      e.preventDefault();
+
+      const role = roleSelect.value;
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const accessCode = document.getElementById('access-code').value.trim();
+
+      if (role === 'landlord' && accessCode !== '38484692') {
+        alert('Invalid access code for landlord registration.');
+        return;
+      }
+
+      let users = getUsers();
+
+      // Check if email already registered
+      if (users.some(user => user.email === email)) {
+        alert('This email is already registered.');
+        return;
+      }
+
+      // Add new user
+      users.push({ role, name, email, password });
+      saveUsers(users);
+
+      alert(`Registered successfully as ${role}!\nName: ${name}\nEmail: ${email}`);
+      e.target.reset();
+      accessCodeDiv.style.display = 'none';
+
+      // Redirect to login page after registration
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tenant Dashboard - Smart Landlord</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <style>
+    body {
+      background-color: #001f3f;
+      color: #ff8c00;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    header, footer {
+      position: relative;
+      z-index: 10;
+      background-color: #001f3f;
+      padding: 10px 20px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo img {
+      height: 40px;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      padding: 0;
+      margin: 0;
+    }
+    nav a {
+      color: #ff8c00;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #142e6c;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      color: white;
+    }
+    h1 {
+      color: #ffb366;
+      margin-bottom: 25px;
+    }
+    .btn {
+      background-color: #ff8c00;
+      color: #001f3f;
+      padding: 12px 25px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 20px;
+    }
+    .btn:hover {
+      background-color: #cc7000;
+    }
+    #tenant-data {
+      margin-top: 20px;
+      background-color: #0d1a3f;
+      padding: 15px;
+      border-radius: 8px;
+      min-height: 150px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="images/logo.png" alt="Smart Landlord Logo" />
+      <div class="logo-text">
+        <h1>Smart Landlord</h1>
+        <p class="tagline">Rent. Track. Relax.</p>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="houses.html">Houses</a></li>
+        <li><a href="tenant.html">Dashboard</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1 id="welcome-message">Welcome to your dashboard!</h1>
+
+    <div id="tenant-data">
+      <!-- Tenant-related info like bookings will go here -->
+      <p>No bookings yet.</p>
+    </div>
+
+    <a href="houses.html" class="btn">Browse Houses</a>
+  </main>
+
+  <footer>
+    <p>Smart Landlord — Rent. Track. Relax.</p>
+    <p class="copyright">© 2025 Smart Landlord. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // On page load, fetch the logged-in tenant's info from localStorage and display welcome message
+    window.addEventListener('DOMContentLoaded', () => {
+      // For demonstration, store the logged in user email in sessionStorage during login
+      const loggedInEmail = sessionStorage.getItem('loggedInEmail');
+      const loggedInRole = sessionStorage.getItem('loggedInRole');
+
+      if (!loggedInEmail || loggedInRole !== 'tenant') {
+        alert('You are not logged in as a tenant. Redirecting to login page.');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Fetch user data from localStorage
+      const users = JSON.parse(localStorage.getItem('users') || '[]');
+      const user = users.find(u => u.email === loggedInEmail && u.role === 'tenant');
+
+      if (!user) {
+        alert('User data not found. Please login again.');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Update welcome message
+      const welcomeMessage = document.getElementById('welcome-message');
+      welcomeMessage.textContent = `Welcome to your dashboard, ${user.name}!`;
+
+      // Placeholder: Load tenant bookings if you add booking system in future
+      // For now, just a static message
+      const tenantDataDiv = document.getElementById('tenant-data');
+      tenantDataDiv.innerHTML = '<p>You currently have no bookings.</p>';
+    });
+  </script>
+
+</body>
+</html>

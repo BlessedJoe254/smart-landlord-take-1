@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Landlord - Houses</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <style>
+    body {
+      background: url('images/home-bg.jpg') no-repeat center center/cover;
+      color: #ff8c00;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: #001f3f;
+      color: #ff8c00;
+      padding: 15px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 3px solid #ff8c00;
+      flex-wrap: wrap;
+    }
+
+    header .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    header .logo img {
+      height: 115px;
+      margin-right: 15px;
+    }
+
+    header .logo-text h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #ff8c00;
+    }
+
+    header .logo-text .tagline {
+      font-size: 1rem;
+      color: #ffb366;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      padding: 0;
+      margin: 0;
+    }
+
+    nav ul li a {
+      color: #ff8c00;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    nav ul li a:hover,
+    nav ul li a.active {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 40px auto;
+      background-color: rgba(1, 27, 54, 0.85);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+      color: white;
+    }
+
+    h2 {
+      color: #ffb366;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .filter-container {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    select#filter-type {
+      padding: 10px 15px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+      background-color: #ff8c00;
+      color: #001f3f;
+      font-weight: bold;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .house-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 25px;
+      justify-content: center;
+    }
+
+    .house-card {
+      background-color: #142e6c;
+      border-radius: 10px;
+      width: 280px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .house-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .house-card img:hover {
+      transform: scale(1.05);
+    }
+
+    .house-details {
+      padding: 15px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .house-details h3 {
+      margin: 0 0 10px 0;
+      color: #ffb366;
+    }
+
+    .house-details p {
+      margin: 4px 0;
+      font-size: 1rem;
+    }
+
+    .availability {
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .available {
+      color: #90ee90; /* light green */
+    }
+
+    .book-btn {
+      background-color: #ff8c00;
+      border: none;
+      color: #001f3f;
+      padding: 10px;
+      font-weight: bold;
+      font-size: 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+
+    .book-btn:hover {
+      background-color: #cc7000;
+    }
+
+    .book-btn:disabled {
+      background-color: #555;
+      cursor: not-allowed;
+      color: #ccc;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px 10px;
+      border-top: 3px solid #ff8c00;
+      color: #ff8c00;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 700px) {
+      .house-list {
+        flex-direction: column;
+        align-items: center;
+      }
+      .house-card {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+     <header>
+  <div class="logo">
+    <img src="images/logo.png" alt="Smart Landlord Logo" />
+    <div class="logo-text">
+      <h1>Smart Landlord</h1>
+      <p class="tagline">Rent. Track. Relax.</p>
+    </div>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="index.html" >Home</a></li>
+      <li><a href="houses.html"class="active">Houses</a></li>
+      <li><a href="aboutus.html">About Us</a></li>
+    </ul>
+  </nav>
+</header>
+
+  <main>
+    <h2>Available Houses for Rent</h2>
+
+    <div class="filter-container">
+      <label for="filter-type" style="margin-right:10px; font-weight:bold; font-size:1.1rem;">Filter by type:</label>
+      <select id="filter-type">
+        <option value="all">All</option>
+        <option value="bedsitter">Bedsitter</option>
+        <option value="single">Single Room</option>
+        <option value="one-bedroom">One Bedroom</option>
+      </select>
+    </div>
+
+    <div class="house-list" id="house-list">
+      <!-- Houses will be populated here by JS -->
+    </div>
+  </main>
+
+  <footer>
+    <p>Smart Landlord — Rent. Track. Relax.</p>
+    <p>© 2025 Smart Landlord. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Helper: load houses from localStorage (array of objects)
+    function loadStoredHouses() {
+      return JSON.parse(localStorage.getItem('houses') || '[]');
+    }
+
+    // Normalize status check (supports both older 'vacant' boolean or 'status' string)
+    function isVacant(h) {
+      if (typeof h.status === 'string') return h.status.toLowerCase() === 'vacant';
+      if (typeof h.vacant === 'boolean') return h.vacant === true;
+      // default to vacant if no explicit status
+      return true;
+    }
+
+    function displayHouses(filterType) {
+      const houseListDiv = document.getElementById('house-list');
+      houseListDiv.innerHTML = '';
+
+      const houses = loadStoredHouses();
+
+      // filter by type (case-insensitive)
+      const filtered = filterType === 'all'
+        ? houses
+        : houses.filter(h => (h.type || '').toLowerCase() === filterType.toLowerCase());
+
+      if (filtered.length === 0) {
+        houseListDiv.innerHTML = `<p style="color:#ffb366; text-align:center;">No houses found for selected filter.</p>`;
+        return;
+      }
+
+      filtered.forEach(house => {
+        const card = document.createElement('div');
+        card.className = 'house-card';
+
+        // image (supports base64 data URL or path)
+        const imgLink = document.createElement('a');
+        imgLink.href = house.image || '#';
+        imgLink.target = '_blank';
+        imgLink.rel = 'noopener noreferrer';
+
+        const img = document.createElement('img');
+        img.src = house.image || 'images/houses/placeholder.jpg';
+        img.alt = (house.description || house.name || house.type || 'House');
+        imgLink.appendChild(img);
+        card.appendChild(imgLink);
+
+        // details
+        const details = document.createElement('div');
+        details.className = 'house-details';
+
+        // Name/Description
+        const title = house.description || house.name || 'No title';
+        // Location - show if present
+        const locationText = house.location ? house.location : (house.address ? house.address : '-');
+        // Price - show if present
+        const priceText = (house.price !== undefined && house.price !== null && house.price !== '') ? `KES ${house.price}` : '-';
+        const vacant = isVacant(house);
+
+        details.innerHTML = `
+          <h3>${title}</h3>
+          <p>Type: ${ (house.type || '-').toString().replace('-', ' ') }</p>
+          <p>Location: ${locationText}</p>
+          <p>Price: ${priceText}</p>
+          <p class="availability ${vacant ? 'available' : ''}">Status: ${vacant ? 'Vacant' : (house.status || 'Occupied')}</p>
+        `;
+
+        // Book button (only for vacancies)
+        const btn = document.createElement('button');
+        btn.className = 'book-btn';
+        btn.textContent = vacant ? 'Book Now' : (house.status === 'Booked' ? 'Booked' : 'Occupied');
+        btn.disabled = !vacant;
+
+        if (vacant) {
+          btn.addEventListener('click', () => {
+            // check tenant login
+            // try sessionStorage first (landlord.html uses sessionStorage loggedInEmail), try common keys
+            const loggedRole = sessionStorage.getItem('loggedInRole') || localStorage.getItem('loggedInRole');
+            const loggedEmail = sessionStorage.getItem('loggedInEmail') || localStorage.getItem('loggedInEmail');
+            // also try stored loggedInTenant object if you used that
+            let tenantObj = null;
+            try {
+              tenantObj = JSON.parse(localStorage.getItem('loggedInTenant') || 'null');
+            } catch(e) { tenantObj = null; }
+
+            if ((!loggedEmail || loggedRole !== 'tenant') && !tenantObj) {
+              if (!confirm('You must be logged in as a tenant to book. Go to login?')) return;
+              window.location.href = 'login.html';
+              return;
+            }
+
+            // determine tenant info
+            const tenantEmail = tenantObj ? tenantObj.email : loggedEmail;
+            const tenantName = tenantObj ? tenantObj.name : (localStorage.getItem('loggedInName') || sessionStorage.getItem('loggedInName') || tenantEmail);
+
+            // perform booking: update the stored houses array
+            const allHouses = loadStoredHouses();
+            const idx = allHouses.findIndex(h => h.id === house.id);
+            if (idx === -1) {
+              alert('House not found (was probably removed).');
+              return;
+            }
+
+            // mark booked
+            allHouses[idx].status = 'Booked';
+            allHouses[idx].bookedByEmail = tenantEmail || null;
+            allHouses[idx].bookedByName = tenantName || null;
+            allHouses[idx].bookedAt = new Date().toISOString();
+            // optional: set payment status
+            allHouses[idx].paymentStatus = 'Pending';
+
+            localStorage.setItem('houses', JSON.stringify(allHouses));
+
+            // also add a bookings record for landlord dashboard compatibility
+            const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+            bookings.push({
+              houseId: allHouses[idx].id,
+              houseName: allHouses[idx].description || allHouses[idx].name || '',
+              tenantEmail: tenantEmail || '',
+              tenantName: tenantName || '',
+              bookedAt: allHouses[idx].bookedAt,
+              paymentStatus: 'Pending',
+              status: 'Booked'
+            });
+            localStorage.setItem('bookings', JSON.stringify(bookings));
+
+            alert(`You have successfully booked ${allHouses[idx].description || allHouses[idx].name || 'this house'}!`);
+            // refresh display for current filter
+            const currentFilter = document.getElementById('filter-type').value || 'all';
+            displayHouses(currentFilter);
+          });
+        }
+
+        details.appendChild(btn);
+        card.appendChild(details);
+        houseListDiv.appendChild(card);
+      });
+    }
+
+    // Re-display when filter changes
+    document.getElementById('filter-type').addEventListener('change', e => {
+      displayHouses(e.target.value);
+    });
+
+    // Refresh when other tabs/windows update localStorage
+    window.addEventListener('storage', (e) => {
+      if (['houses','bookings','users'].includes(e.key)) {
+        const currentFilter = document.getElementById('filter-type').value || 'all';
+        displayHouses(currentFilter);
+      }
+    });
+
+    // initial render
+    displayHouses('all');
+  </script>
+</body>
+</html>

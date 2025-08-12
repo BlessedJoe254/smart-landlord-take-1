@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Landlord - Login</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <style>
+    body {
+      background-color: #001f3f;
+      color: #ff8c00;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    /* New wrapper with background */
+    .hero-bg {
+      min-height: 100vh;
+      background: url('images/home-bg.jpg') no-repeat center center/cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px 15px;
+    }
+    .form-section {
+      max-width: 400px;
+      width: 100%;
+      padding: 25px;
+      background: #142e6c;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      color: white;
+    }
+    .form-section h2 {
+      color: #ffb366;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      color: #ffb366;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: none;
+      font-size: 1rem;
+    }
+    input:focus, select:focus {
+      outline: 2px solid #ff8c00;
+      background-color: #0d1a3f;
+      color: white;
+    }
+    .btn {
+      width: 100%;
+      background-color: #ff8c00;
+      color: #001f3f;
+      padding: 12px;
+      margin-top: 20px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #cc7000;
+    }
+    .access-code-note {
+      font-style: italic;
+      color: #f4c542;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+    /* Keep header and footer on top */
+    header, footer {
+      position: relative;
+      z-index: 10;
+      background-color: #001f3f;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <img src="images/logo.png" alt="Smart Landlord Logo" />
+      <div class="logo-text">
+        <h1>Smart Landlord</h1>
+        <p class="tagline">Rent. Track. Relax.</p>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html" >Home</a></li>
+        <li><a href="houses.html">Houses</a></li>
+        <li><a href="aboutus.html">About Us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero-bg">
+    <section class="form-section">
+      <h2>Login</h2>
+
+      <form id="login-form">
+        <label for="login-role">Login as</label>
+        <select id="login-role" name="login-role" required>
+          <option value="" disabled selected>Select role</option>
+          <option value="tenant">Tenant</option>
+          <option value="landlord">Landlord</option>
+        </select>
+
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" name="login-email" placeholder="Enter your email" required />
+
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" name="login-password" placeholder="Enter password" required />
+
+        <div id="login-access-code-div" style="display:none;">
+          <label for="login-access-code">Landlord Access Code</label>
+          <input type="password" id="login-access-code" name="login-access-code" placeholder="Enter access code" />
+          <div class="access-code-note">* Required to log in as a landlord</div>
+        </div>
+
+        <button type="submit" class="btn">Login</button>
+      </form>
+
+      <p style="text-align:center; margin-top: 15px; color: #ffb366;">
+        Don't have an account? <a href="register.html" style="color: #ff8c00;">Register here</a>
+      </p>
+    </section>
+  </section>
+
+  <footer>
+    <p>Smart Landlord — Rent. Track. Relax.</p>
+    <p class="copyright">© 2025 Smart Landlord. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const loginRoleSelect = document.getElementById('login-role');
+    const loginAccessCodeDiv = document.getElementById('login-access-code-div');
+
+    loginRoleSelect.addEventListener('change', () => {
+      if (loginRoleSelect.value === 'landlord') {
+        loginAccessCodeDiv.style.display = 'block';
+        document.getElementById('login-access-code').setAttribute('required', 'required');
+      } else {
+        loginAccessCodeDiv.style.display = 'none';
+        document.getElementById('login-access-code').removeAttribute('required');
+      }
+    });
+
+    // Utility: get users from localStorage or empty array
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('users') || '[]');
+    }
+
+    document.getElementById('login-form').addEventListener('submit', e => {
+      e.preventDefault();
+
+      const role = loginRoleSelect.value;
+      const email = document.getElementById('login-email').value.trim().toLowerCase();
+      const password = document.getElementById('login-password').value;
+      const accessCode = document.getElementById('login-access-code').value.trim();
+
+      if (role === 'landlord' && accessCode !== '38484692') {
+        alert('Invalid access code for landlord login.');
+        return;
+      }
+
+      const users = getUsers();
+
+      // Find matching user
+      const user = users.find(u => u.email === email && u.password === password && u.role === role);
+
+      if (!user) {
+        alert('Invalid login credentials or role.');
+        return;
+      }
+
+      alert(`Logged in successfully as ${role}!\nEmail: ${email}`);
+
+      // Save logged-in user info for session
+      sessionStorage.setItem('loggedInEmail', email);
+      sessionStorage.setItem('loggedInRole', role);
+
+      e.target.reset();
+      loginAccessCodeDiv.style.display = 'none';
+
+      // Redirect based on role
+      if (role === 'landlord') {
+        window.location.href = 'landlord.html';
+      } else if (role === 'tenant') {
+        window.location.href = 'tenant.html';
+      } else {
+        window.location.href = 'index.html';
+      }
+    });
+  </script>
+</body>
+</html>

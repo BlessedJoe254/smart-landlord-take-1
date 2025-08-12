@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Landlord - Landlord Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <style>
+    body {
+      background-color: #001f3f;
+      color: #ff8c00;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    header, footer {
+      position: relative;
+      z-index: 10;
+      background-color: #001f3f;
+      padding: 10px 20px;
+      color: #ff8c00;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo img {
+      height: 50px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    nav ul li a {
+      color: #ff8c00;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav ul li a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      background: #142e6c;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    h1.page-title {
+      color: #ffb366;
+      margin: 0 0 20px 0;
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .card {
+      background: rgba(0, 20, 50, 0.6);
+      padding: 16px;
+      border-radius: 8px;
+      color: white;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      color: #ffb366;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 6px;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+      background: #0d2348;
+      color: #fff;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 12px;
+      background-color: #ff8c00;
+      color: #001f3f;
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #e67e22;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: #ff8c00;
+      border: 1px solid #ff8c00;
+    }
+
+    .btn.delete {
+      background-color: #cc3300;
+      color: #fff;
+    }
+
+    .btn.delete:hover {
+      background-color: #b22222;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      color: #fff;
+      margin-top: 12px;
+    }
+
+    th, td {
+      border: 1px solid #ff8c00;
+      padding: 8px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      background-color: #ff8c00;
+      color: #001f3f;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #0d1a3f;
+    }
+
+    .status-vacant {
+      color: #90ee90;
+      font-weight: bold;
+    }
+
+    .status-booked {
+      color: #ffd166;
+      font-weight: bold;
+    }
+
+    .status-occupied {
+      color: #ff7b7b;
+      font-weight: bold;
+    }
+
+    .no-data {
+      text-align: center;
+      margin: 10px 0;
+      font-style: italic;
+      color: #f4c542;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="images/logo.png" alt="Smart Landlord Logo" />
+      <div class="logo-text">
+        <h1>Smart Landlord</h1>
+        <p class="tagline">Rent. Track. Relax.</p>
+      </div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="houses.html">Houses</a></li>
+        <li><a href="login.html">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <h1 class="page-title">Landlord Dashboard</h1>
+
+    <div class="grid">
+      <!-- Left column: Add house + My Houses -->
+      <div class="card">
+        <h3 style="color:#ffb366; margin-top:0">Add a New House</h3>
+
+        <form id="add-house-form" enctype="multipart/form-data">
+          <label for="house-type">House Type</label>
+          <select id="house-type" required>
+            <option value="" disabled selected>Select type</option>
+            <option value="bedsitter">Bedsitter</option>
+            <option value="single">Single Room</option>
+            <option value="one-bedroom">One Bedroom</option>
+          </select>
+
+          <label for="house-desc">Description / Name</label>
+          <input id="house-desc" type="text" placeholder="e.g. Sunrise Apartments - Unit 3A" required />
+
+          <label for="house-price">Price (monthly)</label>
+          <input id="house-price" type="number" min="0" placeholder="e.g. 15000" required />
+
+          <!-- ADDED: Image upload field -->
+          <label for="house-image">Upload Image</label>
+          <input id="house-image" type="file" accept="image/*" />
+
+          <button type="submit" class="btn">Add House</button>
+        </form>
+
+        <h3 style="color:#ffb366; margin-top:18px">My Houses</h3>
+        <div id="my-houses-container">
+          <p class="no-data" id="no-houses-msg">No houses added yet.</p>
+          <table id="house-table" style="display:none;">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Booked By</th>
+                <th>Contact</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right column: Tenant table -->
+      <div class="card">
+        <h3 style="color:#ffb366; margin-top:0">Tenants, Bookings & Payments</h3>
+
+        <p class="no-data" id="no-tenants-msg">No tenant data available.</p>
+        <table id="tenant-table" style="display:none;">
+          <thead>
+            <tr>
+              <th>Tenant Name</th>
+              <th>Email</th>
+              <th>House Booked</th>
+              <th>Payment Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Smart Landlord — Rent. Track. Relax.</p>
+    <p>© 2025 Smart Landlord. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Utilities for localStorage management
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('users') || '[]');
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    function getBookings() {
+      return JSON.parse(localStorage.getItem('bookings') || '[]');
+    }
+
+    function saveBookings(bookings) {
+      localStorage.setItem('bookings', JSON.stringify(bookings));
+    }
+
+    function getHouses() {
+      return JSON.parse(localStorage.getItem('houses') || '[]');
+    }
+
+    function saveHouses(houses) {
+      localStorage.setItem('houses', JSON.stringify(houses));
+    }
+
+    // Ensure user is logged in as landlord
+    const loggedInEmail = sessionStorage.getItem('loggedInEmail');
+    const loggedInRole = sessionStorage.getItem('loggedInRole');
+    if (!loggedInEmail || loggedInRole !== 'landlord') {
+      window.location.href = 'login.html';
+    }
+
+    // Elements references
+    const addHouseForm = document.getElementById('add-house-form');
+    const houseTypeInput = document.getElementById('house-type');
+    const houseDescInput = document.getElementById('house-desc');
+    const housePriceInput = document.getElementById('house-price');
+
+    const houseTable = document.querySelector('#house-table');
+    const houseTbody = document.querySelector('#house-table tbody');
+    const noHousesMsg = document.getElementById('no-houses-msg');
+
+    const tenantTable = document.querySelector('#tenant-table');
+    const tenantTbody = document.querySelector('#tenant-table tbody');
+    const noTenantsMsg = document.getElementById('no-tenants-msg');
+
+    // Function: Add new house with optional image upload
+    addHouseForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const type = houseTypeInput.value;
+      const desc = houseDescInput.value.trim();
+      const price = Number(housePriceInput.value);
+
+      if (!type || !desc || isNaN(price)) {
+        alert('Please fill all fields correctly.');
+        return;
+      }
+
+      const fileInput = document.getElementById('house-image');
+      const file = fileInput ? fileInput.files[0] : null;
+
+      const houses = getHouses();
+      const id = Date.now();
+
+      function createAndSave(imageData) {
+        const newHouse = {
+          id,
+          landlordEmail: loggedInEmail,
+          type,
+          description: desc,
+          price,
+          status: 'Vacant', // Vacant | Booked | Occupied
+          bookedByEmail: null,
+          bookedByName: null,
+          bookedAt: null,
+          paymentStatus: null,
+          image: imageData || null
+        };
+
+        houses.push(newHouse);
+        saveHouses(houses);
+
+        // Reset form fields
+        houseTypeInput.value = '';
+        houseDescInput.value = '';
+        housePriceInput.value = '';
+        if (fileInput) fileInput.value = '';
+
+        loadDashboardData();
+        alert('House added successfully.');
+      }
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (evt) {
+          createAndSave(evt.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        createAndSave(null);
+      }
+    });
+
+    // Function: Mark a house as Occupied (landlord action)
+    function markAsOccupied(houseId) {
+      const houses = getHouses();
+      const idx = houses.findIndex(h => h.id === houseId && h.landlordEmail === loggedInEmail);
+
+      if (idx === -1) {
+        alert('House not found or permission denied.');
+        return;
+      }
+
+      houses[idx].status = 'Occupied';
+      saveHouses(houses);
+
+      // Update bookings for this house and tenant if exists
+      let bookings = getBookings();
+      const bIdx = bookings.findIndex(b => b.houseId === houseId && b.tenantEmail === houses[idx].bookedByEmail);
+
+      if (bIdx !== -1) {
+        bookings[bIdx].status = 'Occupied';
+
+        // <-- NEW: Mark payment as Paid when Occupied -->
+        bookings[bIdx].paymentStatus = 'Paid';
+
+        saveBookings(bookings);
+      }
+
+      loadDashboardData();
+    }
+
+    // Function: Permanently delete a tenant and clean up their bookings & houses
+    function deleteTenant(tenantEmail) {
+      if (!confirm(`Are you sure you want to permanently delete tenant with email "${tenantEmail}"?\nThis action cannot be undone.`)) {
+        return;
+      }
+
+      // Remove tenant from users
+      let users = getUsers();
+      users = users.filter(u => u.email !== tenantEmail);
+      saveUsers(users);
+
+      // Remove all bookings by this tenant
+      let bookings = getBookings();
+      bookings = bookings.filter(b => b.tenantEmail !== tenantEmail);
+      saveBookings(bookings);
+
+      // Clear tenant-related info from houses
+      let houses = getHouses();
+      houses = houses.map(house => {
+        if (house.bookedByEmail === tenantEmail) {
+          return {
+            ...house,
+            status: 'Vacant',
+            bookedByEmail: null,
+            bookedByName: null,
+            bookedAt: null,
+            paymentStatus: null
+          };
+        }
+        return house;
+      });
+      saveHouses(houses);
+
+      alert('Tenant and related bookings have been deleted successfully.');
+      loadDashboardData();
+    }
+
+    // Load and render all dashboard data
+    function loadDashboardData() {
+      const users = getUsers();
+      const bookings = getBookings();
+      const houses = getHouses();
+
+      // Render landlord's houses
+      const myHouses = houses.filter(h => h.landlordEmail === loggedInEmail);
+      houseTbody.innerHTML = '';
+
+      if (myHouses.length === 0) {
+        houseTable.style.display = 'none';
+        noHousesMsg.style.display = 'block';
+      } else {
+        houseTable.style.display = '';
+        noHousesMsg.style.display = 'none';
+
+        myHouses.forEach(house => {
+          const status = house.status || 'Vacant';
+
+          const bookedByName = house.bookedByName || (() => {
+            const b = bookings.find(x => x.houseId === house.id);
+            return b ? (b.tenantName || b.tenantEmail) : null;
+          })();
+
+          const bookedByEmail = house.bookedByEmail || (() => {
+            const b = bookings.find(x => x.houseId === house.id);
+            return b ? b.tenantEmail : null;
+          })();
+
+          const tr = document.createElement('tr');
+
+          // House Type
+          const tdType = document.createElement('td');
+          tdType.textContent = house.type;
+          tr.appendChild(tdType);
+
+          // Description
+          const tdDesc = document.createElement('td');
+          tdDesc.textContent = house.description;
+          tr.appendChild(tdDesc);
+
+          // Price
+          const tdPrice = document.createElement('td');
+          tdPrice.textContent = house.price;
+          tr.appendChild(tdPrice);
+
+          // Status
+          const tdStatus = document.createElement('td');
+          tdStatus.innerHTML = status === 'Vacant'
+            ? '<span class="status-vacant">Vacant</span>'
+            : status === 'Booked'
+              ? '<span class="status-booked">Booked</span>'
+              : '<span class="status-occupied">Occupied</span>';
+          tr.appendChild(tdStatus);
+
+          // Booked By
+          const tdBookedBy = document.createElement('td');
+          tdBookedBy.textContent = bookedByName || 'N/A';
+          tr.appendChild(tdBookedBy);
+
+          // Contact
+          const tdContact = document.createElement('td');
+          tdContact.textContent = bookedByEmail || 'N/A';
+          tr.appendChild(tdContact);
+
+          // Action column - Mark as Occupied button
+          const tdAction = document.createElement('td');
+          if (status === 'Booked') {
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.textContent = 'Mark as Occupied';
+            btn.addEventListener('click', () => {
+              if (!confirm('Mark this house as Occupied?')) return;
+              markAsOccupied(house.id);
+            });
+            tdAction.appendChild(btn);
+          } else {
+            tdAction.textContent = '-';
+          }
+          tr.appendChild(tdAction);
+
+          houseTbody.appendChild(tr);
+        });
+      }
+
+      // Render tenant list with delete action
+      const tenants = users.filter(u => u.role === 'tenant');
+      tenantTbody.innerHTML = '';
+
+      if (tenants.length === 0) {
+        tenantTable.style.display = 'none';
+        noTenantsMsg.style.display = 'block';
+      } else {
+        tenantTable.style.display = '';
+        noTenantsMsg.style.display = 'none';
+
+        tenants.forEach(tenant => {
+          // Find booking info
+          const bk = bookings.find(b => b.tenantEmail === tenant.email);
+          const bkHouse = houses.find(h => h.bookedByEmail === tenant.email);
+
+          const bookedHouseName = bk ? bk.houseName : (bkHouse ? bkHouse.description : 'No Booking');
+          const paymentStatus = bk ? (bk.paymentStatus || 'Pending') : (bkHouse ? (bkHouse.paymentStatus || 'Pending') : 'No Payment');
+
+          // Create row
+          const tr = document.createElement('tr');
+
+          // Tenant Name
+          const tdName = document.createElement('td');
+          tdName.textContent = tenant.name || 'N/A';
+          tr.appendChild(tdName);
+
+          // Email
+          const tdEmail = document.createElement('td');
+          tdEmail.textContent = tenant.email;
+          tr.appendChild(tdEmail);
+
+          // House Booked
+          const tdHouse = document.createElement('td');
+          tdHouse.textContent = bookedHouseName;
+          tr.appendChild(tdHouse);
+
+          // Payment Status
+          const tdPayment = document.createElement('td');
+          tdPayment.textContent = paymentStatus;
+          tr.appendChild(tdPayment);
+
+          // Delete button in Action column
+          const tdAction = document.createElement('td');
+          const deleteBtn = document.createElement('button');
+          deleteBtn.className = 'btn delete';
+          deleteBtn.textContent = 'Delete Tenant';
+          deleteBtn.title = `Delete tenant ${tenant.name || tenant.email}`;
+          deleteBtn.addEventListener('click', () => {
+            deleteTenant(tenant.email);
+          });
+          tdAction.appendChild(deleteBtn);
+          tr.appendChild(tdAction);
+
+          tenantTbody.appendChild(tr);
+        });
+      }
+    }
+
+    // Listen for localStorage changes from other tabs/windows
+    window.addEventListener('storage', function (e) {
+      if (['houses', 'bookings', 'users'].includes(e.key)) {
+        loadDashboardData();
+      }
+    });
+
+    // Initial load
+    loadDashboardData();
+  </script>
+</body>
+</html>
